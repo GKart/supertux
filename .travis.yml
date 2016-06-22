@@ -41,6 +41,8 @@ env:
     - USE_GLBINDING=ON
 
 before_install:
+  # Add updated SSL certificate for Coverity, since it won't build otherwise
+  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-certificates.crt
   - if [ "$TRAVIS_SECURE_ENV_VARS" = "true" ]; then
         openssl aes-256-cbc -K $encrypted_d8a9ffcc8634_key -iv $encrypted_d8a9ffcc8634_iv -in .travis/travis-upload.pem.enc -out .travis/travis-upload.pem -d;
     fi
